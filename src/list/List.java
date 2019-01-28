@@ -22,21 +22,22 @@ public interface List<T> {
      * Returns length of list
      * @return length of the list
      */
-    public int size();
+    int size();
     
     /**
      * Return value at index i
      * @param i - index to get value from
      * @return value at index i
      */
-    public T get(int i);
+    T get(int i);
     
     /**
      * Set value of list at index i to x
      * @param i - index to set
      * @param x - value to set at index i
+     * @return value set, else null
      */
-    public void set(int i, T x);
+    T set(int i, T x);
     
     /**
      * Add value x at index i
@@ -51,7 +52,7 @@ public interface List<T> {
      * @param i - index to insert new value, x to
      * @param x - value to insert at i
      */
-    public void add(int i, T x);
+    void add(int i, T x);
     
     /**
      * Remove value at index i
@@ -65,5 +66,5 @@ public interface List<T> {
      * @param i - index to remove
      * @return value removed
      */
-    public T remove(int i);
+    T remove(int i);
 }

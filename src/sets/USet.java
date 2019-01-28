@@ -18,5 +18,5 @@ public interface USet<T> extends Set {
      * @param x - element to find
      * @return - element if exists, otherwise null
      */
-    public T find(T x);
+    T find(T x);
 }

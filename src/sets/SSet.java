@@ -32,5 +32,5 @@ public interface SSet<T> extends Set {
      * @param x - element to find
      * @return the smallest element that is >= x, else null
      */
-    public T find(T x);
+    T find(T x);
 }

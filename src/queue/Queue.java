@@ -15,8 +15,9 @@ public interface Queue<T> {
      * Often called "enqueue()"
      * 
      * @param x - x will be added to Queue
+     * @return - true if added, else false
      */
-    public void add(T x);
+    boolean add(T x);
     
     /**
      * Remove first item from queue and return it
@@ -25,5 +26,5 @@ public interface Queue<T> {
      * 
      * @return removed item
      */
-    public T remove();
+    T remove();
 }

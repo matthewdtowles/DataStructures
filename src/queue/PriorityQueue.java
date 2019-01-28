@@ -16,5 +16,5 @@ public interface PriorityQueue<T> extends Queue {
     /**
      * @return highest priority item
      */
-    public T findMin();
+    T findMin();
 }

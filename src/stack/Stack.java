@@ -13,13 +13,14 @@ public interface Stack<T> {
      * Adds x to the top of the Stack
      * 
      * @param x 
+     * @return x if push successful, else null
      */
-    public void push(T x);
+    T push(T x);
     
     /**
      * Removes last item added to Stack and returns it
      * 
      * @return - removed item
      */
-    public T pop();
+    T pop();
 }

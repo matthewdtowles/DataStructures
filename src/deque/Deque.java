@@ -15,13 +15,13 @@ public interface Deque<T> {
      * Like Stack::push(x) 
      * @param x 
      */
-    public void addFirst(T x);
+    void addFirst(T x);
     
     /**
      * Like Queue::add(x)
      * @param x 
      */
-    public void addLast(T x);
+    void addLast(T x);
     
     /**
      * Remove and return the first or top item
@@ -29,11 +29,11 @@ public interface Deque<T> {
      * 
      * @return removed item
      */
-    public T removeFirst();
+    T removeFirst();
     
     /**
      * Remove and return the last or bottom item
      * @return removed item
      */
-    public T removeLast();
+    T removeLast();
 }
