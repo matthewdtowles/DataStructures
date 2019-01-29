@@ -17,7 +17,7 @@ public class ArrayDeque<T> implements List<T> {
     /**
      * Index of next item to be removed
      */
-    int j;
+    int nextRemoveIndex;
     
     /**
      * Number of elements in a[]
@@ -45,7 +45,7 @@ public class ArrayDeque<T> implements List<T> {
         if (i < 0 || i > n-1) {
             throw new IndexOutOfBoundsException();
         }
-        return a[(j+i)%a.length];
+        return a[(nextRemoveIndex+i)%a.length];
     }
 
     
@@ -60,8 +60,8 @@ public class ArrayDeque<T> implements List<T> {
         if (i < 0 || i > n-1) {
             throw new IndexOutOfBoundsException();
         }
-        T y = a[(j+i)%a.length];
-        a[(j+i)%a.length] = x;
+        T y = a[(nextRemoveIndex+i)%a.length];
+        a[(nextRemoveIndex+i)%a.length] = x;
         return y;
     }
 
@@ -81,17 +81,17 @@ public class ArrayDeque<T> implements List<T> {
         }
         if (i < n/2) {
             // shift a[0],..,a[i-1] left one position
-            j = (j == 0) ? a.length - 1 : j - 1; //(j-1)mod a.length
+            nextRemoveIndex = (nextRemoveIndex == 0) ? a.length - 1 : nextRemoveIndex - 1;
             for (int k = 0; k <= i-1; k++) {
-                a[(j+k)%a.length] = a[(j+k+1)%a.length];
+                a[(nextRemoveIndex+k)%a.length] = a[(nextRemoveIndex+k+1)%a.length];
             }
         } else { 
             // shift a[i],..,a[n-1] right one position
             for (int k = n; k > i; k--) {
-                a[(j+k)%a.length] = a[(j+k-1)%a.length];
+                a[(nextRemoveIndex+k)%a.length] = a[(nextRemoveIndex+k-1)%a.length];
             }
         }
-        a[(j+i)%a.length] = x;
+        a[(nextRemoveIndex+i)%a.length] = x;
         n++;
     }
 
@@ -106,17 +106,17 @@ public class ArrayDeque<T> implements List<T> {
         if (i < 0 || i > n - 1) {
             throw new IndexOutOfBoundsException();
         }
-        T x = a[(j+i)%a.length];
+        T x = a[(nextRemoveIndex+i)%a.length];
         if (i < n/2) { 
             // shift a[0],..,[i-1] right one position
             for (int k = i; k > 0; k--) {
-                a[(j+k)%a.length] = a[(j+k-1)%a.length];
+                a[(nextRemoveIndex+k)%a.length] = a[(nextRemoveIndex+k-1)%a.length];
             }
-            j = (j + 1) % a.length;
+            nextRemoveIndex = (nextRemoveIndex + 1) % a.length;
         } else { 
             // shift a[i+1],..,a[n-1] left one position
             for (int k = i; k < n-1; k++) {
-                a[(j+k)%a.length] = a[(j+k+1)%a.length];
+                a[(nextRemoveIndex+k)%a.length] = a[(nextRemoveIndex+k+1)%a.length];
             }
         }
         n--;
