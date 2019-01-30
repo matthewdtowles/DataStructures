@@ -1,5 +1,7 @@
 package list.selist;
 
+import list.List;
+
 /**
  * Space-Efficient Linked-List
  * Implements the List Interface
@@ -17,7 +19,7 @@ package list.selist;
  * @author matthew.towles
  * @param <T>
  */
-public class SEList<T> {
+public class SEList<T> implements List<T> {
     
     /**
      * Number of elements
@@ -42,7 +44,8 @@ public class SEList<T> {
      * @param i
      * @return element at index i
      */
-    T get(int i) {
+    @Override
+    public T get(int i) {
         if (i < 0 || i > n - 1) {
             throw new IndexOutOfBoundsException();
         }
@@ -57,7 +60,8 @@ public class SEList<T> {
      * @param x
      * @return element set
      */
-    T set(int i, T x) {
+    @Override
+    public T set(int i, T x) {
         if (i < 0 || i > n - 1) {
             throw new IndexOutOfBoundsException();
         }
@@ -116,7 +120,8 @@ public class SEList<T> {
      * @param i
      * @param x 
      */
-    void add(int i, T x) {
+    @Override
+    public void add(int i, T x) {
         if (i < 0 || i > n) {
             throw new IndexOutOfBoundsException();
         }
@@ -166,7 +171,8 @@ public class SEList<T> {
      * @param i
      * @return removed element
      */
-    T remove(int i) {
+    @Override
+    public T remove(int i) {
         if (i < 0 || i > n - 1) {
             throw new IndexOutOfBoundsException();
         }
@@ -272,6 +278,11 @@ public class SEList<T> {
             }
             return new Location(u, i-idx);
         }
+    }
+
+    @Override
+    public int size() {
+        return n;
     }
  
     
