@@ -11,7 +11,7 @@ package queue;
  * @author matthew.towles
  * @param <T> - type of PriorityQueue
  */
-public interface PriorityQueue<T> extends Queue {
+public interface PriorityQueue<T> extends Queue<T> {
     
     /**
      * @return highest priority item
