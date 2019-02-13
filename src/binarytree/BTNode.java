@@ -5,8 +5,9 @@ package binarytree;
  * @author matthew.towles
  * @param <Node>
  */
-class BTNode<Node extends BTNode<Node>> {
-    Node left;
-    Node right;
-    Node parent;
+public class BTNode<Node extends BTNode<Node>> {
+    public Node left;
+    public Node right;
+    public Node parent;
+    public Object x;
 }

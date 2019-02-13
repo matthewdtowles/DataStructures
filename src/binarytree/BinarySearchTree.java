@@ -1,5 +1,6 @@
 package binarytree;
 
+import java.util.Comparator;
 import list.selist.Node;
 
 /**
@@ -10,8 +11,9 @@ import list.selist.Node;
  * @author matthew.towles
  * @param <T>
  */
-public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
+public abstract class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
     
+    Comparator c;
     
     /**
      * Search for x and return if found
@@ -21,13 +23,13 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
     T findEQ(T x) {
         BTNode u = r;
         while (u != null) {
-            int comp = compare(x, u.x);
+            int comp = c.compare(x, u.x);
             if (comp < 0) 
                 u = u.left;
             else if (comp > 0)
                 u = u.right;
             else
-                return u.x;
+                return (T) u.x;
         }
         return null;
     }
@@ -38,20 +40,20 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
      * @param x
      * @return smallest value >= x
      */
-    T find(T x) {
+    T bstfind(T x) {
         BTNode w = r, z = null;
         while (w != null) {
-            int comp = compare(x, w.x);
+            int comp = c.compare(x, w.x);
             if (comp < 0) {
                 z = w;
                 w = w.left;
             } else if (comp > 0) {
                 w = w.right;
             } else {
-                return w.x;
+                return (T) w.x;
             }
         }
-        return z == null ? null : z.x;
+        return (T) z.x;
     }
     
     
@@ -65,10 +67,10 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
      * @param x
      * @return 
      */
-    boolean add(T x) {
-        Node p = findLast(x);
-        return addChild(p, newNode(x));        
-    }
+//    boolean bstadd(T x) {
+//        Node p = findLast(x);
+//        return addChild(p, newNode(x));        
+//    }
     
     
     /**
@@ -76,21 +78,21 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
      * @param x
      * @return 
      */
-    Node findLast(T x) {
-        Node w = r, prev = nil;
-        while (w != nil) {
-            prev = w;
-            int comp = compare(x, w.x);
-            if (comp < 0) {
-                w = w.left;
-            } else if (comp > 0) {
-                w = w.right;
-            } else {
-                return w;
-            }
-        }
-        return prev;
-    }
+//    Node findLast(T x) {
+//        Node w = r, prev = null;
+//        while (w != null) {
+//            prev = w;
+//            int comp = c.compare(x, w.x);
+//            if (comp < 0) {
+//                w = w.left;
+//            } else if (comp > 0) {
+//                w = w.right;
+//            } else {
+//                return w;
+//            }
+//        }
+//        return prev;
+//    }
     
     
     /**
@@ -99,23 +101,23 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
      * @param u
      * @return 
      */
-    boolean addChild(Node p, Node u) {
-        if (p == nil) {
-            r = u;              // inserting into empty tree
-        } else {
-            int comp = compare(u.x, p.x);
-            if (comp < 0) {
-                p.left = u;
-            } else if (comp > 0) {
-                p.right = u;
-            } else {
-                return false;   // u.x is already in the tree
-            }
-            u.parent = p;
-        }
-        n++;
-        return true;        
-    }
+//    boolean addChild(Node p, Node u) {
+//        if (p == nil) {
+//            r = u;              // inserting into empty tree
+//        } else {
+//            int comp = c.compare(u.x, p.x);
+//            if (comp < 0) {
+//                p.left = u;
+//            } else if (comp > 0) {
+//                p.right = u;
+//            } else {
+//                return false;   // u.x is already in the tree
+//            }
+//            u.parent = p;
+//        }
+//        n++;
+//        return true;        
+//    }
     
     
     
@@ -128,46 +130,46 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
      * Remove u and make u.parent the parent of u.child
      * @param u 
      */
-    void splice(Node u) {
-        Node s, p;
-        if (u.left != null) {
-            s = u.left;
-        } else {
-            s = u.right;
-        }
-        if (u == r) {
-            r = s;
-            p = nil;
-        } else {
-            p = u.parent;
-            if (p.left == u) {
-                p.left = s;
-            } else {
-                p.right = s; 
-            }
-        }
-        if (s != nil) {
-            s.parent = p;
-        }
-        n--;
-    }
+//    void splice(Node u) {
+//        Node s, p;
+//        if (u.left != null) {
+//            s = u.left;
+//        } else {
+//            s = u.right;
+//        }
+//        if (u == r) {
+//            r = s;
+//            p = nil;
+//        } else {
+//            p = u.parent;
+//            if (p.left == u) {
+//                p.left = s;
+//            } else {
+//                p.right = s; 
+//            }
+//        }
+//        if (s != nil) {
+//            s.parent = p;
+//        }
+//        n--;
+//    }
     
     
     /**
      * Removes u and replaces with w node
      * @param u 
      */
-    public void remove(Node u) {
-        if (u.left == nil || u.right == nil) {
-            splice(u);
-        } else {
-            Node w = u.right;
-            while (w.left != nil) 
-                w = w.left;
-            u.x = w.x;
-            splice(w);
-        }
-    }
+//    public void remove(Node u) {
+//        if (u.left == nil || u.right == nil) {
+//            splice(u);
+//        } else {
+//            Node w = u.right;
+//            while (w.left != nil) 
+//                w = w.left;
+//            u.x = w.x;
+//            splice(w);
+//        }
+//    }
 
     @Override
     public int size() {
@@ -176,6 +178,10 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
 
     @Override
     public Object remove(Object x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Node newNode(T x) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

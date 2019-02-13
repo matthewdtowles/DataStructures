@@ -7,9 +7,11 @@ package list.selist;
  * @param <T>
  */
 public class Node<T> {
-    list.BDeque<T> block;
-    Node<T> prev;
-    Node<T> next;
+    public list.BDeque<T> block;
+    public Node<T> prev;
+    public Node<T> next;
+    public Node right;
+    public Node left;
     
     public Node(int b) {
         block = new list.BDeque<>(b);

@@ -1,5 +1,6 @@
 package heap;
 
+import java.util.Comparator;
 import queue.PriorityQueue;
 
 /**
@@ -26,6 +27,8 @@ public class MeldableHeap<T> implements PriorityQueue<T> {
     Node r;
     
     int n;
+    
+    Comparator c;
     
     
     /**
@@ -92,12 +95,12 @@ public class MeldableHeap<T> implements PriorityQueue<T> {
         }
         // h1 and h2 have content:
         // make sure h1.x <= h2.x - otherwise call merge(h2, h1)
-        if (compare(h2.x, h1.x) < 0) {
+        if (c.compare(h2.x, h1.x) < 0) {
             return merge(h2, h1);
         }
         // now we know h1.x <= h2.x
         // random - 50/50 true/false
-        if (rand.nextBoolean()) { // 50% chance - random:
+        if (randomBoolean()) { // 50% chance - random:
             h1.left = merge(h1.left, h2);
             h1.left.parent = h1;
         } else {                  // 50% chance - random:
@@ -107,19 +110,17 @@ public class MeldableHeap<T> implements PriorityQueue<T> {
         return h1;
     }
 
+    /**
+     * 50/50 returns true/false
+     * @return 
+     */
+    public boolean randomBoolean() {
+        return Math.random() > 0.5;
+    }
+    
+    
     @Override
     public T findMin() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-    public int compare(T x, T x0) {
-        return x - x0;
-    }
-
-
-        
-        
-        
-        
+    }            
 }

@@ -1,5 +1,6 @@
 package heap;
 
+import java.util.Comparator;
 import queue.PriorityQueue;
 
 /**
@@ -14,12 +15,29 @@ public class BinaryHeap<T> implements PriorityQueue<T> {
     /**
      * Number of elements
      */
-    int n;
+    public int n;
     
     /**
      * Elements stored in array
      */
-    T[] a;
+    public T[] a;
+    
+    public Comparator c;
+    
+    
+    /**
+     * Constructor
+     * @param a
+     * @param c 
+     */
+    public BinaryHeap(T[] a, Comparator c) {
+        this.a = a;
+        this.c = c;
+        n = a.length;
+        for (int i = n/2 - 1; i >= 0; i--) {
+            trickleDown(i);
+        }
+    }
     
     
     /**
@@ -73,18 +91,18 @@ public class BinaryHeap<T> implements PriorityQueue<T> {
      * 
      * @param i 
      */
-    void trickleDown(int i) {
+    public final void trickleDown(int i) {
         do {
             int j = -1;
             // index of right child
             int rightIndex = right(i);
             // check if larger than right child
-            if (rightIndex < n && compare(a[rightIndex], a[i]) < 0) {
+            if (rightIndex < n && c.compare(a[rightIndex], a[i]) < 0) {
                 // right child smaller than element
                 
                 int leftIndex = left(i);
                 // check if left child is smaller than right child
-                if (compare(a[leftIndex], a[rightIndex]) < 0) {
+                if (c.compare(a[leftIndex], a[rightIndex]) < 0) {
                     // left child is smallest - save its index for swap
                     j = leftIndex;
                 } else {
@@ -95,7 +113,7 @@ public class BinaryHeap<T> implements PriorityQueue<T> {
                 // element < rightChild
                 
                 int leftIndex = left(i);
-                if (leftIndex < n && compare(a[leftIndex], a[i]) < 0) {
+                if (leftIndex < n && c.compare(a[leftIndex], a[i]) < 0) {
                     // element > leftChild - save index for swap
                     j = leftIndex;
                 }
@@ -118,7 +136,7 @@ public class BinaryHeap<T> implements PriorityQueue<T> {
      */
     public void bubbleUp(int i) {
         int p = parent(i);
-        while (i > 0 && compare(a[i], a[p]) < 0) {
+        while (i > 0 && c.compare(a[i], a[p]) < 0) {
             swap(i,p);
             i = p;
             p = parent(i);
