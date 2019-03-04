@@ -10,22 +10,22 @@ public class BinaryTree<T> {
     /**
      * Root node
      */
-    BTNode r;
+    public BTNode root;
     
-    int n;
+    public int size;
     
     
     /**
      * Compute depth of a node
      * Counts number of steps on path from u to root
      * 
-     * @param u - node to count depth of
+     * @param node - node to count depth of
      * @return number of steps on path from u to root
      */
-    int depth(BTNode u) {
+    int depth(BTNode node) {
         int d = 0;
-        while (u != r) {
-            u = u.parent;
+        while (node != root) {
+            node = node.parent;
             d++;
         }
         return d;
@@ -34,14 +34,14 @@ public class BinaryTree<T> {
     
     /**
      * Recursively count sizes of two subtrees rooted at children of u
-     * @param u
+     * @param node
      * @return number of nodes in binary tree
      */
-    int size(BTNode u) {
-        if (u == null) {
+    int size(BTNode node) {
+        if (node == null) {
             return 0;
         }
-        return 1 + size(u.left) + size(u.right);
+        return 1 + size(node.left) + size(node.right);
     }
     
     
@@ -49,27 +49,27 @@ public class BinaryTree<T> {
      * Compute height of a node
      * Get height of node's subtrees
      * Take the larger of the two, + 1 and return it
-     * @param u
+     * @param node
      * @return height of u
      */
-    int height(BTNode u) {
-        if (u == null) {
+    int height(BTNode node) {
+        if (node == null) {
             return -1;
         }
-        return 1 + Math.max(height(u.left), height(u.right));
+        return 1 + Math.max(height(node.left), height(node.right));
     }
     
     
     /**
      * Recursive way to Depth-first traverse BT
-     * @param u 
+     * @param node 
      */
-    void traverse(BTNode u) {
-        if (u == null){
+    void traverse(BTNode node) {
+        if (node == null){
             return;
         }
-        traverse(u.left);
-        traverse(u.right);
+        traverse(node.left);
+        traverse(node.right);
     }
     
     
@@ -77,30 +77,30 @@ public class BinaryTree<T> {
      * Depth-first Non-recursive way to traverse BT
      */
     void traverse2() {
-        BTNode u = r, prev = null, next;
-        while (u != null) {
-            if (prev == u.parent) {
-                if (u.left != null) {
-                    next = u.left;
+        BTNode node = root, prev = null, next;
+        while (node != null) {
+            if (prev == node.parent) {
+                if (node.left != null) {
+                    next = node.left;
                 }
-                else if (u.right != null) {
-                    next = u.right;
-                }
-                else {
-                    next = u.parent;
-                }
-            } else if (prev == u.left) {
-                if (u.right != null) {
-                    next = u.right;
+                else if (node.right != null) {
+                    next = node.right;
                 }
                 else {
-                    next = u.parent;
+                    next = node.parent;
+                }
+            } else if (prev == node.left) {
+                if (node.right != null) {
+                    next = node.right;
+                }
+                else {
+                    next = node.parent;
                 }
             } else {
-                next = u.parent;
+                next = node.parent;
             }
-            prev = u;
-            u = next;
+            prev = node;
+            node = next;
         }
     }
     
@@ -109,7 +109,7 @@ public class BinaryTree<T> {
      */
 //    void bfTraverse() {
 //        queue.Queue<Node> q = new LinkedList<Node>();
-//        if (r != nil) q.add(r);
+//        if (root != nil) q.add(root);
 //        while (!q.isEmpty()) {
 //            Node u = q.remove();
 //            if (u.left != nil) q.add(u.left);

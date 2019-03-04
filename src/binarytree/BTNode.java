@@ -3,11 +3,13 @@ package binarytree;
 /**
  *
  * @author matthew.towles
- * @param <Node>
+ * @param <T>
  */
-public class BTNode<Node extends BTNode<Node>> {
-    public Node left;
-    public Node right;
-    public Node parent;
-    public Object x;
+public class BTNode<T> {
+    public BTNode left = null;
+    public BTNode right = null;
+    public BTNode parent;
+    public int value;
+    
+    
 }

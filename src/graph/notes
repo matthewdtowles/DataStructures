@@ -1,0 +1,398 @@
+Table of Contents
+I.   In notebook
+II.  Graph Searching
+       A. Breadth-First Search
+       B. Depth-First Search
+III. Topological Sort
+IV.  Dijkstra's Shortest Path Algorithm
+       A. Algorithm Implementation
+       B. Why Dijkstra's Algorithm Is Optimal
+       C. Run-time Growth of Dijkstra's Algorithm
+       D. An Efficient Implementation Dijkstra's Algorithm for Sparse Graphs
+       E. Dijkstra's Algorithm for Acyclic Graphs
+V.   Minimum Spanning Tree
+******************************************************************************
+
+II. Graph Searching
+
+* * *
+A. Bread-First Search (BFS)
+
+Search vertices of graph in order of distance from initial vertex
+Implemented using a queue (FIFO structure)
+How it works:
+    1. Enqueue an initial vertex as starting point
+    2. Loop:  dequeue vertex, visit vertex, enqueue vertexes connected to it
+In pseudocode how it works:
+START PSEUDOCODE
+    `
+    // set vertices to false
+    // to indicate they have not been visited
+    for each Vertex v
+        v.visited = false;
+    
+    // queue the initial vertex by giving a vertex as parameter
+    queue.enqueue(initial Vertex);
+
+    // loop through all vertexes
+    while(true) {
+        // first time around v is the initial vertex
+        // then whatever is in the queue next
+        v = queue.dequeue();
+
+        // if v null then we are done
+        if (v == null)
+            break;
+
+        // if we are back to an already visited vertex, skip it
+        if (v.visited)
+            continue;
+
+        // we have a vertex and haven't visited it yet, let's visit it
+        v.visit();
+        v.visited = true;
+
+        // for each vertex connected to v, add to queue
+        for (Vertex w connected to v) {
+            queue.enqueue(w);
+        }
+    }
+    `
+END PSEUDOCODE
+
+Run time for BFS depends on data structure used b/c of the
+    for loop checking all vertexes connected to vertex v
+Adjacency matrix - O(|V|^2):  whole row of vertexes is walked to check if connected to v
+Adjacency list - O(|V| + |E|):  max times for loop ran is |E| times
+    Plus while loop will run |V| times
+    This is why we bother with adjacency lists if |E| << |V|^2
+
+
+* * *
+B. Depth-First Search (DFS)
+Search vertexes so that a chain is followed to its end
+    then backtracks until vertex that is not an end is reached
+    then continues DFS from this vertex
+Can be implemented using a stack
+In pseudocode:
+START PSEUDOCODE
+    `
+    // not vertex has been visited
+    for each Vertex v
+        v.visited = false;
+
+    // push first vertex to stack
+    stack.push(initialVertex);
+    while (true) {
+        
+        v = stack.pop();
+
+        if (v == null)
+          break;
+
+        if (v.visited) 
+            continue;
+
+        v.visit();
+        v.visited = true;
+
+        for (Vertex w connected to v) {
+            stack.push(w);
+        }
+    }
+    `
+END PSEUDOCODE
+*****************************************************************************
+
+
+III. Topological Sort
+
+Graph with order like a dependency graph
+    i.e: b must be visited to get to c
+    or b and c must be satisfied to get to d
+Some examples in real world of topological ordering:
+    - Pert project management diagram
+    - Building a system from source files by compiling source code files in
+        a specific order (like make or Ant)
+This is done on unweighted graphs
+If a vertex does NOT have in-arcs, then it has 0 dependencies
+    i.e.: it is a valid starting point
+How to calculate in-arcs:
+    - depends on data structure used to store graph
+    - adjacency matrix:  traverse columns of each vertex. In-arcs are the 1s in the column
+    - adjacency list: walking all edges in graph; adding 1 to in-degree of a vertex when encountered
+    - any node with in-degree == 0 can be visited/processed
+Next we walk to the vertexes connected to vertex
+    any node connected to it has in-degree --1 since a dependency has been satisfied
+Continue to look for next vertex.inDegree == 0
+    this goes on until all vertexes processed/no node exists with in-degree == 0
+START PSEUDOCODE
+`
+    Find initial indegree for all nodes;
+    for (int i = 0; i < Vertices; i++) {
+        Vertex v = findVertexOfInDegreeZero();
+        v.topSort = i;
+        for (Vertex w connected to v) {
+            w.inDegree--;
+        }
+    }
+`
+END PSEUDOCODE
+! Above runs in O(|V|^2) since finding in-degree of 0 is O(|V|) plus another looping
+!! This can be improved by enqueueing each vertex when its indegree == 0
+    run time reduced to O(|E| + |V|)
+START PSEUDOCODE
+`
+    Find initial indegree for all nodes;
+    for (Vertex v in vertices) {
+        if (v.indegree == 0) {
+            queue.enqueue(v);
+        }
+    }
+    count = 0;
+    while (true) {
+        if (queue.isEmpty()) {
+            break;
+        }
+        counter++;
+        v = queue.dequeue();
+        v.topologicalOrder = counter;
+        for (Vertex w connected to v) {
+            w.indegree--;
+            if (w.indegree == 0) {
+                queue.enqueue(w);
+            }
+        }
+    }
+`
+END PSEUDOCODE
+! Topological ordering valid only on acyclic graphs
+!! if there is a cycle, then there is nowhere to begin, everything has an indegree > 0
+*****************************************************************************
+
+
+IV.  Dijkstra's Shortest Path Algorithm
+
+* * *
+A. Algorithm Implementation
+It is a greedy algorithm
+    best immediate choice is made every time a choice is to be made
+    in this case, it results in a provably optimal solution
+A DS is kept with shortest path currently known to any edge
+Selects shorted edge to an unvisited node as next edge is processed
+When an edge is processed, a shorter path to a not-yet selected node may be found
+    DS updated to show new shortest path to that node
+Repeat process until all nodes reachable from initial node are processed
+START PSEUDOCODE
+`
+    class Dijkstra {
+        public int dist = 0;
+        public boolean known = false;
+        Vertex Pv;
+    }
+
+    public void main() {
+        Dijkstra dijkstra[] = new Dijkstra[numberOfVertices];
+        Shortestpath(dijkstra);
+    }
+
+    public void shortestpath(Dijkstra dijkstra) {
+        for each(Vertex w) {
+            dijkstra[w].dist = Double.POSITIVE_INFINITY;
+            dijkstra[w].known = false;
+            dijkstra[w].Pv = null;
+        }
+
+        dijkstra[initialVertex].distance = 0;
+
+        while (true) {
+            v = null;
+
+            // find smallest unknown vertex
+            currentDistance = Double.POSITIVE_INFINITY;
+            for each (Vertex w) {
+                if ((!dijkstra[w].known) && (dijkstra[w].distance < currentDistance)) {
+                    v = w;
+                }
+            }
+
+            // stop alg when no more nodes to process:
+            if (v == null) {
+                break;
+            }
+
+            // process this node:
+            dijkstra[v].known = true;
+            for each (Vertex w adjacent to v) {
+                if (!dijkstra[w].known) {
+                    if ((dijkstra[v].distance + cost(v,w)) < dijkstra[w].distance) {
+                        dijkstra[w].distance = dijkstra[v].distance + cost(v,w);
+                        w.Pv = v;
+                    }
+                }
+            }
+        }
+    }
+`
+END PSEUDOCODE
+
+
+* * *
+B. Why Dijkstra's Algorithm Is Optimal
+Lets say we start on v1 and go to v2
+Consider the situation where there is a shorter path from v1 to v2 that goes 
+    through some node, w
+If such a path exists, then v1->w must be shorter than v1->v2
+And so the path of v1->w is selected, not v1->v2
+And then w->v2
+
+
+* * *
+C. Run-time Growth of Dijkstra's Algorithm
+The for loop that initialized the dijkstras in the array is O(|V|)
+The outer while loop must execute for each reachable vertex, so it is O(|V|)
+Then the two inner for loops:
+    the first finds the next smallest node using the array of dijkstras
+    this means each vertex is evaluated, which is O(|V|)
+So the while loop as a whole with the inner loops is O(|V|^2)
+Ergo, algorithm as a whole is at least O(|V|^2)
+Next is the loop that actually processes the vertex v
+    if matrix is used: O(|V|^2)
+    if list: O(|E|)
+Since algorithm is already O(|V|^2), O(|E|) is insignificant
+Therefore, runtime is O(|V|^2)
+
+
+* * *
+D. An Efficient Implementation Dijkstra's Algorithm for Sparse Graphs
+Sparse graph is when |E| << |V|^2 
+    or when |E| <= |V| 
+Problem points in above implementation:
+    finding minimum distance requires O(|V|) operation for every vertex
+If binary heap is used to store and retrieve nodes, finding smaller vertex is O(log |V|)
+The distance to any vertex changes during execution if a shorter path is uncovered
+    when this happens, vertex must be found in the heap
+    and then updated to the new value via 'decreaseKey()'
+Here is the part of code that is changed:
+START PSEUDOCODE 
+`
+    // process this node:
+    dijkstra[v].known = true;
+    for each (Vertex w adjacent to v) {
+        if (!dijkstra[w].known) {
+            if ((dijkstra[v].distance + cost(v,w)) < dijkstra[w].distance) {
+                
+                // added for this implementation ///////////////////////////////
+                vertexHeap.insert((dijkstra[v].distance + cost(v,w)), w);
+                // end addition ////////////////////////////////////////////////
+
+                dijkstra[w].distance = dijkstra[v].distance + cost(v,w);
+                w.Pv = v;
+            }
+        }
+    }
+` 
+END PSEUDOCODE
+
+
+* * *
+E. Dijkstra's Algorithm for Acyclic Graphs
+Calculate by first doing a topological sort on nodes
+The process/update the distance of the nodes in topological order
+Since all previous nodes will have been processed when a node is reach
+    smallest path gtd to have been found
+
+
+Complete Pseudocode for Dijkstra with adjacency matrix:
+`
+    class Dijkstra {
+        public int dist = 0;
+        public boolean known = false;
+    }
+    Dijkstra dijskra[] = new Dijkstra[noOfVertices];
+
+    BinaryHeap vertexHeap;
+
+    for each Vertex w {
+        dijkstra[w].dist = Double.POSITIVE_INFINITY;
+        dijkstra[w].known = false;
+    }
+
+    dijkstra[initialVertex].distance = 0;
+
+    while (true) {
+        v = null;
+
+        // find the smallest unknown vertex
+        v = vertexHeap.deleteMin();
+
+        // Stop the algorithm when no more nodes to process
+        if (v == null)
+            break;
+
+
+        // process this node.
+        dijkstra[v].known = true;
+        for each Vertex w adjacent to v {
+            if (dijkstra[w].known == false) {
+                if (dijkstra[v].distance + cost(v,w) < dijkstra[w].distance) {
+                    vertexHeap.insert((dijkstra[v] + cost(v,w)), w);
+                    dijkstra[w].distance = dijkstra[v].distance + cost(v,w);
+                    w.Pv = v;
+                }
+            }
+        }
+    }
+`
+
+*****************************************************************************
+
+V. Minimum Spanning Tree
+
+A collection of edges to an undirected, weighted graph that is 
+    the lowest cost to make the graph connected
+Prim's algorithm is similar to Dijkstra's
+Idea of Prim's algorithm:
+    build a tree by accepting lowest cost edges that DO NOT result in a cycle
+        (must be acyclic)
+The pseudocode:
+`
+    class Prim {
+        public int dist = 0;
+        public boolean known = false;
+        Vertex Pv;
+    }
+    Prim prim[] = new Prim[numberOfVertices];
+    for each (Vertex w) {
+        prim[w].dist = Double.POSITIVE_INFINITY;
+        prim[w].known = false;
+        prim[w].Pv = null;
+    }
+    prim[initialVertex].distance = 0;
+
+    while (true) {
+        v = null;
+
+        // find smallest unknown vertex
+        distance = Double.POSITIVE_INFINITY;
+        for each (Vertex w) {
+            if ((!prim[w].known) && (prim[w].distance < currentDistance)) {
+                v = w;
+            }
+        }
+
+        if (v == null)
+            break;
+
+        // process this node:
+        prim[v].known = true;
+        for each(Vertex w adjacent to v) {
+            if (!prim[w].known) {
+                if (cost(v,w) < prim[w].distance) {
+                    prim[w].distance = cost(v,w);
+                    w.Pv = v;
+                }
+            }
+        }
+    }
+`

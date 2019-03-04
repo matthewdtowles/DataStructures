@@ -1,179 +1,186 @@
 package binarytree;
 
 import java.util.Comparator;
-import list.selist.Node;
 
 /**
  * Binary Search Tree
- * 
- * Implements SSet Interface
- * add, remove, find in O(n) time
+ 
+ Implements SSet Interface
+ add, remove, find in O(size) time
  * @author matthew.towles
  * @param <T>
  */
-public abstract class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet {
+public class BinarySearchTree<T> extends BinaryTree<T> implements sets.SSet<T> {
     
-    Comparator c;
+    Comparator<Integer> comparator;
     
     /**
-     * Search for x and return if found
-     * @param x
-     * @return x if found, else null
+     * Search for value and return if found
+     * @param value
+     * @return value if found, else null
      */
-    T findEQ(T x) {
-        BTNode u = r;
-        while (u != null) {
-            int comp = c.compare(x, u.x);
-            if (comp < 0) 
-                u = u.left;
-            else if (comp > 0)
-                u = u.right;
-            else
-                return (T) u.x;
+    int findEQ(int value) {
+        BTNode node = root;
+        while (node != null) {
+            int comp = compare(value, node.value);
+            if (comp < 0) {
+                node = node.left;
+            }
+            else if (comp > 0) {
+                node = node.right;
+            } else {
+                return node.value;
+            }
         }
-        return null;
+        return 0;
     }
      
     
     /**
-     * Find smallest value stored in BST >= x
-     * @param x
-     * @return smallest value >= x
+     * Find smallest value stored in BST >= value
+     * @param value
+     * @return smallest value >= value
      */
-    T bstfind(T x) {
-        BTNode w = r, z = null;
-        while (w != null) {
-            int comp = c.compare(x, w.x);
+    int bstfind(int value) {
+        BTNode subroot = root, smallestNode = null;
+        while (subroot != null) {
+            int comp = compare(value, subroot.value);
             if (comp < 0) {
-                z = w;
-                w = w.left;
+                smallestNode = subroot;
+                subroot = subroot.left;
             } else if (comp > 0) {
-                w = w.right;
+                subroot = subroot.right;
             } else {
-                return (T) w.x;
+                return subroot.value;
             }
         }
-        return (T) z.x;
+        return smallestNode.value;
     }
     
     
     
     /**
-     * Adding
+     * ADDING METHODS
      */
     
     /**
      * Add new node to BST
-     * @param x
+     * @param value
      * @return 
      */
-//    boolean bstadd(T x) {
-//        Node p = findLast(x);
-//        return addChild(p, newNode(x));        
-//    }
+    public boolean bstadd(int value) {
+        BTNode node = findLast(value);
+        return addChild(node, newNode(value));        
+    }
     
     
     /**
-     * Find where new x will belong
-     * @param x
+     * Find where new value will belong
+     * @param value
      * @return 
      */
-//    Node findLast(T x) {
-//        Node w = r, prev = null;
-//        while (w != null) {
-//            prev = w;
-//            int comp = c.compare(x, w.x);
-//            if (comp < 0) {
-//                w = w.left;
-//            } else if (comp > 0) {
-//                w = w.right;
-//            } else {
-//                return w;
-//            }
-//        }
-//        return prev;
-//    }
+    BTNode findLast(int value) {
+        BTNode rt = root, prev = null;
+        while (rt != null) {
+            prev = rt;
+            //System.out.println("in findLast():::->  value: " + value + " -- & -- rt.value: " + rt.value);
+            int comp;
+            comp = compare(value, rt.value);
+            if (comp < 0) {
+                rt = rt.left;
+            } else if (comp > 0) {
+                rt = rt.right;
+            } else {
+                return rt;
+            }
+        }
+        return prev;
+    }
     
+
+    int compare(int a, int b) {
+        return a - b;
+    }
     
     /**
      * Add child to left or right of new parent?
-     * @param p
-     * @param u
+     * @param node1
+     * @param node2
      * @return 
      */
-//    boolean addChild(Node p, Node u) {
-//        if (p == nil) {
-//            r = u;              // inserting into empty tree
-//        } else {
-//            int comp = c.compare(u.x, p.x);
-//            if (comp < 0) {
-//                p.left = u;
-//            } else if (comp > 0) {
-//                p.right = u;
-//            } else {
-//                return false;   // u.x is already in the tree
-//            }
-//            u.parent = p;
-//        }
-//        n++;
-//        return true;        
-//    }
+    public boolean addChild(BTNode node1, BTNode node2) {
+        if (node1 == null) {
+            root = node2;              // inserting into empty tree
+        } else {
+            int comp = compare(node2.value, node1.value);
+            if (comp < 0) {
+                node1.left = node2;
+            } else if (comp > 0) {
+                node1.right = node2;
+            } else {
+                return false;   // node2.value is already in the tree
+            }
+            node2.parent = node1;
+        }
+        size++;
+        return true;        
+    }
     
     
     
     /**
-     * Removal:
+     * REMOVAL METHODS:
      */
     
     
     /**
-     * Remove u and make u.parent the parent of u.child
-     * @param u 
+     * Remove node and make node.parent the parent of node.child
+     * @param node 
      */
-//    void splice(Node u) {
-//        Node s, p;
-//        if (u.left != null) {
-//            s = u.left;
-//        } else {
-//            s = u.right;
-//        }
-//        if (u == r) {
-//            r = s;
-//            p = nil;
-//        } else {
-//            p = u.parent;
-//            if (p.left == u) {
-//                p.left = s;
-//            } else {
-//                p.right = s; 
-//            }
-//        }
-//        if (s != nil) {
-//            s.parent = p;
-//        }
-//        n--;
-//    }
+    public void splice(BTNode node) {
+        BTNode node1, node2;
+        if (node.left != null) {
+            node1 = node.left;
+        } else {
+            node1 = node.right;
+        }
+        if (node == root) {
+            root = node1;
+            node2 = null;
+        } else {
+            node2 = node.parent;
+            if (node2.left == node) {
+                node2.left = node1;
+            } else {
+                node2.right = node1; 
+            }
+        }
+        if (node1 != null) {
+            node1.parent = node2;
+        }
+        size--;
+    }
     
     
     /**
-     * Removes u and replaces with w node
-     * @param u 
+     * Removes given node and replaces with correct node
+     * @param node 
      */
-//    public void remove(Node u) {
-//        if (u.left == nil || u.right == nil) {
-//            splice(u);
-//        } else {
-//            Node w = u.right;
-//            while (w.left != nil) 
-//                w = w.left;
-//            u.x = w.x;
-//            splice(w);
-//        }
-//    }
+    public void remove(BTNode node) {
+        if (node.left == null || node.right == null) {
+            splice(node);
+        } else {
+            BTNode replacerNode = node.right;
+            while (replacerNode.left != null) 
+                replacerNode = replacerNode.left;
+            node.value = replacerNode.value;
+            splice(replacerNode);
+        }
+    }
 
     @Override
     public int size() {
-        return n;
+        return size;
     }
 
     @Override
@@ -181,7 +188,19 @@ public abstract class BinarySearchTree<T> extends BinaryTree<T> implements sets.
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private Node newNode(T x) {
+    private BTNode newNode(int value) {
+        BTNode node = new BTNode();
+        node.value = value;
+        return node;
+    }
+
+    @Override
+    public T find(T x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean add(Object x) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
